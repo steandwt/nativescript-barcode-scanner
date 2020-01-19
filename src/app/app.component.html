@@ -1,0 +1,14 @@
+    <StackLayout class="p-20" spacing="10">
+
+        <Button text="Scan" (tap)="onScan()" class="btn btn-primary btn-active main-button scan-button"></Button>
+
+        <ListView height="75%" [items]="barcodeList" (itemTap)="onItemTap($event)" class="list-group">
+            <ng-template let-item="item" let-i="index">
+                <StackLayout>
+                    <label text="{{item.barcode}}"></label>
+                </StackLayout>
+            </ng-template>
+        </ListView>
+
+        <Button text="Send" (tap)="send()" class="btn btn-primary btn-active main-button save-button"></Button>
+    </StackLayout>
