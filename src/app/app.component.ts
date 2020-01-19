@@ -12,9 +12,6 @@ export class AppComponent implements OnInit {
 
     barcodeList: IBarcode[] = [];
     dialogs = require("tns-core-modules/ui/dialogs");
-    currentActiveBarcode: string;
-
-    a: boolean = false
 
     ngOnInit(): void {
 
@@ -69,11 +66,10 @@ export class AppComponent implements OnInit {
     }
 
     onItemTap(args: ItemEventData) {
-        this.currentActiveBarcode = this.barcodeList[args.index].barcode;
 
         this.dialogs.confirm({
             title: "Remove Barcode",
-            message: this.currentActiveBarcode,
+            message: this.barcodeList[args.index].barcode,
             okButtonText: "Remove",
             cancelButtonText: "Cancel"
         }).then((result) => {
