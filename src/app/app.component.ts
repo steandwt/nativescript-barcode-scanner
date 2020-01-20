@@ -2,7 +2,6 @@ import { Component, OnInit } from "@angular/core";
 import { BarcodeScanner } from 'nativescript-barcodescanner';
 import { ItemEventData } from "tns-core-modules/ui/list-view";
 import * as email from "nativescript-email";
-import { throwError } from 'rxjs'; 
 
 @Component({
     selector: "ns-app",
