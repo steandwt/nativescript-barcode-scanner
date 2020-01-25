@@ -104,7 +104,8 @@ this.barcodeList.forEach(x => {
             var dateTime = date.getTime();
 
             const folderPath: string = knownFolders.documents().path;
-            const fileName: string = index+"_"+"dateTime"+".jpg";
+            const fileName: string = this.barcodeList[index].Barcode+"_"+dateTime+".jpg";
+
             const filePath: string = path.join(folderPath, fileName);
             const saved: boolean = imageSource.saveToFile(filePath, "jpg");
     
