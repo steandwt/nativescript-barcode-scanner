@@ -1,7 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { BarcodeScanner } from 'nativescript-barcodescanner';
-import { ItemEventData } from "tns-core-modules/ui/list-view";
 import * as email from "nativescript-email";
+import * as camera from "nativescript-camera";
+import {ImageSource} from "tns-core-modules/image-source";
+import { knownFolders, path } from "tns-core-modules/file-system";
 
 @Component({
     selector: "ns-app",
@@ -11,9 +13,9 @@ export class AppComponent implements OnInit {
 
     barcodeList: IBarcode[] = [];
     dialogs = require("tns-core-modules/ui/dialogs");
+    attachments: any[] = []; 
 
     ngOnInit(): void {
-
     }
 
     constructor(private barcodeScanner: BarcodeScanner) {
@@ -31,10 +33,10 @@ export class AppComponent implements OnInit {
             resultDisplayDuration: 0,
         }).then((result) => {
 
-            let duplicate = this.barcodeList.find(x => x.barcode == result.text);
+            let duplicate = this.barcodeList.find(x => x.Barcode == result.text);
 
             if (!duplicate) {
-                this.barcodeList.push({ barcode: result.text });
+                this.barcodeList.push({ Barcode: result.text });
             }
             
         }, (errorMessage) => {
@@ -44,18 +46,28 @@ export class AppComponent implements OnInit {
 
     public send() {
 
+this.barcodeList.forEach(x => {
+    if(x.ImagePath){
+        this.attachments.push({
+            fileName: x.Barcode + ".jpg", 
+            mimeType: "image/jpg", 
+            path: x.ImagePath}); 
+    }
+}); 
+
         email.available().then((available: boolean) => {
             if (available) {
 
                 let body = ""; 
 
                 this.barcodeList.forEach(x => {
-                    body = body + "\n" + x.barcode; 
+                    body = body + "\n" + x.Barcode; 
                 });
 
                 email.compose({
                     subject: "",
-                    body: body
+                    body: body, 
+                    attachments: this.attachments
                 });
 
             } else {
@@ -64,23 +76,70 @@ export class AppComponent implements OnInit {
         });
     }
 
-    onItemTap(args: ItemEventData) {
+    deleteItem(index: number) {
 
         this.dialogs.confirm({
             title: "Remove Barcode",
-            message: this.barcodeList[args.index].barcode,
+            message: this.barcodeList[index].Barcode,
             okButtonText: "Remove",
             cancelButtonText: "Cancel"
         }).then((result) => {
             if (result) {
-                this.barcodeList.splice(args.index, 1);
+                this.barcodeList.splice(index, 1);
+            }
+        });
+    }
+
+    addImage(index: number){
+
+        camera.requestPermissions().then(
+             () => {
+               camera.takePicture()   
+    .then((imageAsset) => {
+
+        ImageSource.fromAsset(imageAsset)
+        .then((imageSource: ImageSource) => {
+
+            var date = new Date();
+            var dateTime = date.getTime();
+
+            const folderPath: string = knownFolders.documents().path;
+            const fileName: string = index+"_"+"dateTime"+".jpg";
+            const filePath: string = path.join(folderPath, fileName);
+            const saved: boolean = imageSource.saveToFile(filePath, "jpg");
+    
+            if (saved) {
+                this.barcodeList[index].ImagePath = filePath; 
+            }
+        });
+    }).catch(function (err) {
+        alert("Error -> " + err.message);
+    });
+            }, 
+            function failure() {
+                alert("Permission request failed");
+            }
+        );
+        
+    }
+
+    deleteImage(index: number){
+        this.dialogs.confirm({
+            title: "Remove Image",
+            message: "Are you sure you want to remove this image?",
+            okButtonText: "Remove",
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result) {
+                this.barcodeList[index].ImagePath = null;
             }
         });
     }
 }
 
-export interface IBarcode {
-    barcode: string;
+interface IBarcode {
+    Barcode: string;
+    ImagePath?: string; 
 }
 
 
