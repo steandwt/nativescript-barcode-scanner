@@ -4,6 +4,7 @@ import { NativeScriptFormsModule } from "nativescript-angular/forms"
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { BarcodeScanner } from 'nativescript-barcodescanner';
+import { Fontawesome } from "nativescript-fontawesome";
 
 @NgModule({
     bootstrap: [
