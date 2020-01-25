@@ -11,7 +11,7 @@ import { knownFolders, path } from "tns-core-modules/file-system";
 })
 export class AppComponent implements OnInit {
 
-    barcodeList: IBarcode[] = [{Barcode: "123"}];
+    barcodeList: IBarcode[] = [];
     dialogs = require("tns-core-modules/ui/dialogs");
     attachments: any[] = []; 
 
