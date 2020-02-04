@@ -6,7 +6,7 @@
             <ng-template let-item="item" let-i="index">
               <GridLayout columns="*,*,*,*" rows="*,*,*,*" width=100%>
                   <Image width="20" src="res://delete_icon" (tap)="deleteItem(i)"></Image>
-                  <label (tap)="onItemTap($event)" text="{{item.Barcode}}" col="1" colspan="3"></label>
+                  <label text="{{item.Barcode}}" col="1" colspan="3"></label>
                   <Button *ngIf="!barcodeList[i].ImagePath" width="100" text="Add Image" col="5" (tap)="addImage(i)" class="btn"></Button>
                   <Image *ngIf="barcodeList[i].ImagePath" src="{{barcodeList[i].ImagePath}}" col="5" (tap)="deleteImage(i)"></Image>
               </GridLayout>
